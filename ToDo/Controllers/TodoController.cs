@@ -2,7 +2,7 @@
 
 namespace ToDo.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("[Controller]")]
     [ApiController]
     public class TodoController : ControllerBase
     {
@@ -20,6 +20,12 @@ namespace ToDo.Controllers
             todoList.Add(todo);
 
             return Ok(todo);
+        }
+
+        [HttpGet]
+        public IActionResult GetTodo()
+        {
+            return Ok("Successful");
         }
     }
 }
