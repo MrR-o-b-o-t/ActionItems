@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToDo.Controllers
 {
@@ -16,11 +17,15 @@ namespace ToDo.Controllers
                 return BadRequest("Todo must contain at least one character/number. Try Again.");
             }
 
-            todo.Id = todoList.Count + 1;
-            todoList.Add(todo);
+            using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
+            {
+                dbContext.Todos.Add(todo);
+                dbContext.SaveChanges();
+            }
 
             return Ok(todo);
         }
+
 
         [HttpGet]
         public IActionResult Get()
