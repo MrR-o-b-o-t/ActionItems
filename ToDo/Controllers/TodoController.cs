@@ -23,7 +23,7 @@ namespace ToDo.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTodo()
+        public IActionResult Get()
         {
             return Ok("Successful");
         }
