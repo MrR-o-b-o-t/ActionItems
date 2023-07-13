@@ -1,20 +1,40 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Home = () => {
     const [todos, setTodos] = useState([
-        { id: 1, title: 'Buy groceries', completed: false },
-        { id: 2, title: 'Finish homework', completed: false },
-        { id: 3, title: 'Walk the dog', completed: true },
-        // Add more todos as needed
+
     ]);
 
     const [newTodo, setNewTodo] = useState('');
 
-    const handleAddTodo = () => {
+    const createTodo = async (todoData) => {
+        try {
+            const response = await axios.post('/Todo', todoData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const deleteTodo = async (id) => {
+        try {
+            const response = await axios.delete('/Todo', id)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleAddTodo = async () => {
         if (newTodo.trim() !== '') {
-            const todo = { id: todos.length + 1, title: newTodo, completed: false };
+            const todo = {
+                id: Math.floor(Math.random() * 1000),
+                title: newTodo,
+                completed: false
+            };
             setTodos([...todos, todo]);
             setNewTodo('');
+            await createTodo(todo);
         }
     };
 
@@ -26,10 +46,11 @@ const Home = () => {
         );
     };
 
-    const handleRemoveTodo = (id) => {
+    const handleRemoveTodo = async (id) => {
         setTodos(prevTodos =>
             prevTodos.filter(todo => todo.id !== id)
         );
+        await deleteTodo(id);
     };
 
     return (
@@ -43,14 +64,13 @@ const Home = () => {
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
                 />
-                    <button className="btn btn-primary" type="button" onClick={handleAddTodo}>
-                        Add Todo
-                    </button>
+                <button className="btn btn-primary" type="button" onClick={handleAddTodo}>
+                    Add Todo
+                </button>
             </div>
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Title</th>
                         <th>Completed</th>
                         <th>Actions</th>
@@ -59,7 +79,6 @@ const Home = () => {
                 <tbody>
                     {todos.map(todo => (
                         <tr key={todo.id}>
-                            <td>{todo.id}</td>
                             <td>{todo.title}</td>
                             <td>{todo.completed ? 'Yes' : 'No'}</td>
                             <td>

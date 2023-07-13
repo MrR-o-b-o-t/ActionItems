@@ -26,6 +26,19 @@ namespace ToDo.Controllers
             return Ok(todo);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTodo(int id)
+        {
+            var todo = todoList.FirstOrDefault(todo => todo.Id == id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            todoList.Remove(todo);
+
+            return Ok(todo);
+        }
 
         [HttpGet]
         public IActionResult Get()
