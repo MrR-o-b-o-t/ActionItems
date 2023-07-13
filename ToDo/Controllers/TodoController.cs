@@ -7,7 +7,6 @@ namespace ToDo.Controllers
     [ApiController]
     public class TodoController : ControllerBase
     {
-        private static List<Todo> todoList = new List<Todo>();
 
         [HttpPost]
         public IActionResult AddTodo([FromBody] Todo todo)
@@ -29,21 +28,52 @@ namespace ToDo.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteTodo(int id)
         {
-            var todo = todoList.FirstOrDefault(todo => todo.Id == id);
-            if (todo == null)
+            using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
             {
-                return NotFound();
+                var todo = dbContext.Todos.FirstOrDefault(t => t.Id == id);
+                if (todo == null)
+                {
+                    return NotFound();
+                }
+
+                dbContext.Todos.Remove(todo);
+                dbContext.SaveChanges();
+
+                var todoList = dbContext.Todos.ToList();
+
+                return Ok(todoList);
             }
-
-            todoList.Remove(todo);
-
-            return Ok(todo);
         }
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdateCompleted(int id)
+        {
+            using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
+            {
+                var todo = dbContext.Todos.FirstOrDefault(t => t.Id == id);
+                if (todo == null)
+                {
+                    return NotFound();
+                }
+
+                todo.Completed = !todo.Completed;
+                dbContext.SaveChanges();
+
+
+                return Ok("Success");
+            }
+        }
+
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Successful");
+            using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
+            {
+                var todos = dbContext.Todos.ToList();
+
+                return Ok(todos);
+            }
         }
     }
 }
