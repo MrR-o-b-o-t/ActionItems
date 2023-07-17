@@ -10,8 +10,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 // Configure the database context
 builder.Services.AddDbContext<YourDbContext>(options =>
-    options.UseNpgsql(connectionString, npgsqlOptions =>
-        npgsqlOptions.UseNodaTime()));
+    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
