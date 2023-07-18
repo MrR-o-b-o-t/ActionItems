@@ -30,7 +30,7 @@ namespace ToDo.Controllers
         {
             using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
             {
-                var todo = dbContext.Todos.FirstOrDefault(t => t.Id == id);
+                var todo = dbContext.Todos.FirstOrDefault(t => t.id == id);
                 if (todo == null)
                 {
                     return NotFound();
@@ -50,13 +50,13 @@ namespace ToDo.Controllers
         {
             using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
             {
-                var todo = dbContext.Todos.FirstOrDefault(t => t.Id == id);
+                var todo = dbContext.Todos.FirstOrDefault(t => t.id == id);
                 if (todo == null)
                 {
                     return NotFound();
                 }
 
-                todo.Completed = !todo.Completed;
+                todo.completed = !todo.completed;
                 dbContext.SaveChanges();
 
 
