@@ -69,6 +69,7 @@ namespace ToDo.Controllers
         public IActionResult Get()
         {
             using (var dbContext = new YourDbContext(HttpContext.RequestServices.GetRequiredService<DbContextOptions<YourDbContext>>()))
+
             {
                 var todos = dbContext.Todos.ToList();
 
